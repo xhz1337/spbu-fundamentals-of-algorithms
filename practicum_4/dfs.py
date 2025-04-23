@@ -87,7 +87,7 @@ class DfsViaLifoQueueWithPrinting(DfsViaLifoQueue):
         pass
 
 
-class TopologicalSorting(DfsViaRecursion):
+class TopologicalSorting(DfsViaLifoQueue):
     ##########################
     ### PUT YOUR CODE HERE ###
     #########################
