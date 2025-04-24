@@ -13,7 +13,6 @@ class CentralityMeasure(Protocol):
     def __call__(self, G: AnyNxGraph) -> dict[Any, float]:
         ...
 
-
 def closeness_centrality(G: AnyNxGraph) -> dict[Any, float]:
     closeness_centralities = {} 
     g_range = range(len(G))
