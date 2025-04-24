@@ -22,14 +22,22 @@ def closeness_centrality(G: nx.Graph) -> dict[Any, float]:
         centrality[node] = (n - 1) / total_distance
     return centrality
 
-def betweenness_centrality(G: AnyNxGraph) -> dict[Any, float]: 
-
-    ##########################
-    ### PUT YOUR CODE HERE ###
-    #########################
-
-    pass
-
+def betweenness_centrality(G):
+    betweenness = {v: 0.0 for v in G.nodes()}
+    nodes = list(G.nodes())
+    n = len(nodes)
+    for s, t in combinations(nodes, 2):
+        sigma_st = len(list(nx.all_shortest_paths(G, s, t)))
+        for v in nodes:
+            if v != s and v != t:          
+                dist_st = nx.shortest_path_length(G, s, t)
+                dist_sv = nx.shortest_path_length(G, s, v)
+                dist_vt = nx.shortest_path_length(G, v, t)
+                if dist_sv + dist_vt == dist_st:      
+                    sigma_sv = len(list(nx.all_shortest_paths(G, s, v)))
+                    sigma_vt = len(list(nx.all_shortest_paths(G, v, t)))
+                    betweenness[v] += (sigma_sv * sigma_vt) / sigma_st
+    return betweenness # значения отличаются от функции в nx тк не юзаем scale; в nx каждый элемент умножается на 2/((n-1)*(n-2))
 
 def eigenvector_centrality(G: AnyNxGraph) -> dict[Any, float]: 
 
@@ -50,8 +58,9 @@ def plot_centrality_measure(G: AnyNxGraph, measure: CentralityMeasure) -> None:
 
 if __name__ == "__main__":
     G = nx.karate_club_graph()
-    print(closeness_centrality(G))
-    print(nx.closeness_centrality(G))
+    print(betweenness_centrality(G))
+    print("------------------------------")
+    print(nx.betweenness_centrality(G))
     #plot_centrality_measure(G, closeness_centrality)
     #plot_centrality_measure(G, betweenness_centrality)
     #plot_centrality_measure(G, eigenvector_centrality)
