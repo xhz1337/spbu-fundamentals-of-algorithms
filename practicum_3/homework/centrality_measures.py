@@ -22,8 +22,8 @@ def closeness_centrality(G: nx.Graph) -> dict[Any, float]:
         centrality[node] = (n - 1) / total_distance
     return centrality
 
-def betweenness_centrality(G):
-    betweenness = {v: 0.0 for v in G.nodes()}
+def betweenness_centrality(G: nx.Graph) -> dict[Any, float]:
+    centrality = {n: 0.0 for n in G.nodes()}
     nodes = list(G.nodes())
     n = len(nodes)
     for s, t in combinations(nodes, 2):
@@ -36,17 +36,17 @@ def betweenness_centrality(G):
                 if dist_sv + dist_vt == dist_st:      
                     sigma_sv = len(list(nx.all_shortest_paths(G, s, v)))
                     sigma_vt = len(list(nx.all_shortest_paths(G, v, t)))
-                    betweenness[v] += (sigma_sv * sigma_vt) / sigma_st
-    return betweenness # значения отличаются от функции в nx тк не юзаем scale; в nx каждый элемент умножается на 2/((n-1)*(n-2))
+                    centrality[v] += (sigma_sv * sigma_vt) / sigma_st
+    return centrality # значения отличаются от функции в nx тк не юзаем scale; в nx каждый элемент умножается на 2/((n-1)*(n-2))
 
-def eigenvector_centrality(G: AnyNxGraph) -> dict[Any, float]: 
-
-    ##########################
-    ### PUT YOUR CODE HERE ###
-    #########################
-
-    pass
-
+def eigenvector_centrality(G: AnyNxGraph) -> dict[Any, float]:
+    centrality = {}
+    nodes = list(G.nodes())
+    eigenvalues, eigenvectors = np.linalg.eigh(nx.adjacency_matrix(G).todense().astype(float))
+    major_eigenvector = np.abs(eigenvectors[:, np.argmax(np.abs(eigenvalues))].flatten())
+    for i in range(len(nodes)):
+        centrality[nodes[i]] = float(major_eigenvector[i])
+    return centrality # достаточно близкие значения
 
 def plot_centrality_measure(G: AnyNxGraph, measure: CentralityMeasure) -> None:
     values = measure(G)
@@ -58,10 +58,7 @@ def plot_centrality_measure(G: AnyNxGraph, measure: CentralityMeasure) -> None:
 
 if __name__ == "__main__":
     G = nx.karate_club_graph()
-    print(betweenness_centrality(G))
-    print("------------------------------")
-    print(nx.betweenness_centrality(G))
-    #plot_centrality_measure(G, closeness_centrality)
-    #plot_centrality_measure(G, betweenness_centrality)
-    #plot_centrality_measure(G, eigenvector_centrality)
+    plot_centrality_measure(G, closeness_centrality)
+    plot_centrality_measure(G, betweenness_centrality)
+    plot_centrality_measure(G, eigenvector_centrality)
 
