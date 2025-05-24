@@ -26,8 +26,8 @@ class LuSolverWithPermute(LinearSystemSolver):
     def _decompose(self, permute: bool) -> tuple[NDArrayFloat, NDArrayFloat, NDArrayFloat]:
         U = self.A.copy()
         n = U.shape[0]
-        P = np.eye(n, dtype=A.dtype)
-        L = np.eye(n, dtype=A.dtype)
+        P = np.eye(n, dtype=self.A.dtype)
+        L = np.eye(n, dtype=self.A.dtype)
 
         for i in range(n-1):
             if permute:
