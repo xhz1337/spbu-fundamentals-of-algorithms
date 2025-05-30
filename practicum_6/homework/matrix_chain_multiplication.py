@@ -15,7 +15,7 @@ class MatrixChainMultiplication:
     def run(self, matrices: list[dict[str, Union[str, tuple[int, int]]]]) -> tuple[AnyNxGraph, str]:
         mats = matrices.copy()
         while len(mats) > 1:
-            idx = max(range(len(mats) - 1), key=lambda i: mats[i]["shape"][1])
+            idx = min(range(len(mats) - 1), key=lambda i: mats[i]["shape"][1])
             left, right = mats[idx], mats[idx + 1]
             parent = left["matrix_name"] + right["matrix_name"]
             self.graph.add_edge(parent, left["matrix_name"])
